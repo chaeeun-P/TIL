@@ -47,6 +47,7 @@ SELECT
 FROM basic.trainer
 WHERE kor_name = "피카츄"
 ```
+---
 ### 요약 (집계, 그룹화, 정렬) 
 ```
 SELECT
