@@ -61,7 +61,7 @@ GROUP BY 집계할 때 사용하는 칼럼
 ```
 SELECT
     집계할 때 사용하는 칼럼 (그냥 한 번 더 씀),
-    COUNT(DISTINCT 칼럼)
+    COUNT 칼럼 
 FROME table
 GROUP BY 집계할 때 사용하는 칼럼 
 ```
@@ -87,7 +87,7 @@ FROM
 LIMIT 10
 ORDER BY 칼럼순서
 ```
-* 순서 : DESC(내림차순), OSC(오름차순 - default)
+* 순서 : DESC(내림차순), ASC(오름차순 - default)
 * 보통 order by 를 가장 맨 마지막에 씀
 * LIMIT : 쿼리문 결과의 행 수 제한 
 
