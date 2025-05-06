@@ -50,7 +50,7 @@
 * EDA 코드
     * 왜도 확인 : df.skew()
     * 첨도 확인 : df.kurtosis()
-    * 분포 확인 : sns.distplot(df['칼럼'])
+    * 분포 확인 : sns.distplot(df['칼럼']) 
 
 ### 공분산 / 상관계수
 
