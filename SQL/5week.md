@@ -1,5 +1,5 @@
 # 수강 사진
-![사진](/)
+![사진](/images/스크린샷%202025-05-06%20225032.png)
 
 # 4-4. 날짜 및 시간 데이터 이해하기 (2)
 * `CURRENT_DATETIME([time_zone])` : 현재 datetime 출력  
@@ -9,18 +9,18 @@
     * CURRENT_DATETIME("Asia/Seoul") → 2025-05-07 00:03:22 (서울 시간 기준) 
 * `EXTRACT(part FROM datetime_expression)` : DATETIME 에서 특정 부분만 추출하고 싶은 경우 (e.g. 월별 주문)
     * 예시 코드  
-        ![사진](/)  
+        ![사진](/images/스크린샷%202025-05-06%20185946.png)  
     * 요일 추출하는 경우 : `EXTRACT(DAYOFWEEK FROM datetime_col) -> 한 주의 첫날이 일요일인 [1,7] 범위의 값을 변환 (e.g. 일요일은 - 1, 월요일은 - 2) 
     * DATE 와 HOUR 만 남기고 싶은 경우 (나머지는 0으로 채워짐) : `DATETIME_TRUNC(datetime_col, HOUR)`  
-        ![사진](/)
+        ![사진](/images/스크린샷%202025-05-06%20185810.png)
 * `PARSE_DATETIME` : 문자열로 저장된 DATETIME 을 DATETIME 타입으로 바꾸고 싶은 경우  
-    ![사진](/)
-* `FORMAT_DATETIME` : DATETIME 타입 데이터를 특저 형태의 문자열 데이터로 변환  
-    ![사진](/)
+    ![사진](/images/스크린샷%202025-05-06%20190048.png)
+* `FORMAT_DATETIME` : DATETIME 타입 데이터를 특정 형태의 문자열 데이터로 변환  
+    ![사진](/images/스크린샷%202025-05-06%20190148.png)
 * `LAST_DAY` : 마지막 날을 알고 싶은 경우, 자동으로 월의 마지막 값을 계산해서 특정 연산을 할 경우  
-    ![사진](/)
+    ![사진](/images/스크린샷%202025-05-06%20190403.png)
 * `DATETIME_DIFF` : 두 DATETIME의 차이를 알고 싶은 경우  
-    ![사진](/)
+    ![사진](/images/스크린샷%202025-05-06%20203421.png)
 
 
 # 4-5. 시간 데이터 연습문
@@ -146,7 +146,7 @@ ORDER BY
         END AS 새로운 칼럼 이름 
         ```
     * 예시 문제  
-        ![사진](/)  
+        ![사진](/images/스크린샷%202025-05-06%20220430.png)  
     * 두 when 에 다 겹치면, 앞선 순서를 따른다는 것을 명심! 
 * `IF` : 단일 조건일 때
     * 작성 방법  
