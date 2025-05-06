@@ -2,7 +2,7 @@
 ![사진](/)
 
 # 4-4. 날짜 및 시간 데이터 이해하기 (2)
-* `CURRENT_DATETIME([time_zone])` : 현재 datetime 출력 
+* `CURRENT_DATETIME([time_zone])` : 현재 datetime 출력  
     * CURRENT_DATE() → 2025-05-06 (UTC)
     * CURRENT_DATE("Asia/Seoul") → 2025-05-07 (한국 시간이 time zone (기준), 한국은 UTC+9)
     * CURRENT_DATETIME() → 2025-05-06 15:03:22 (UTC)
