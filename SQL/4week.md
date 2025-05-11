@@ -1,92 +1,262 @@
-## 수강 사진
-![사진](/images/스크린샷%202025-04-07%20192502.png)
----
-## 오류를 바라보는 관점
+# 수강 사진
+![사진](/images/스크린샷%202025-05-06%20225032.png)
 
-**오류는 길잡이의 역할**  
-![사진](/images/스크린샷%202025-04-07%20164057.png)
-### bigquery error
+# 4-4. 날짜 및 시간 데이터 이해하기 (2)
+* `CURRENT_DATETIME([time_zone])` : 현재 datetime 출력  
+    * CURRENT_DATE() → 2025-05-06 (UTC)
+    * CURRENT_DATE("Asia/Seoul") → 2025-05-07 (한국 시간이 time zone (기준), 한국은 UTC+9)
+    * CURRENT_DATETIME() → 2025-05-06 15:03:22 (UTC)
+    * CURRENT_DATETIME("Asia/Seoul") → 2025-05-07 00:03:22 (서울 시간 기준) 
+* `EXTRACT(part FROM datetime_expression)` : DATETIME 에서 특정 부분만 추출하고 싶은 경우 (e.g. 월별 주문)
+    * 예시 코드  
+        ![사진](/images/스크린샷%202025-05-06%20185946.png)  
+    * 요일 추출하는 경우 : `EXTRACT(DAYOFWEEK FROM datetime_col) -> 한 주의 첫날이 일요일인 [1,7] 범위의 값을 변환 (e.g. 일요일은 - 1, 월요일은 - 2) 
+    * DATE 와 HOUR 만 남기고 싶은 경우 (나머지는 0으로 채워짐) : `DATETIME_TRUNC(datetime_col, HOUR)`  
+        ![사진](/images/스크린샷%202025-05-06%20185810.png)
+* `PARSE_DATETIME` : 문자열로 저장된 DATETIME 을 DATETIME 타입으로 바꾸고 싶은 경우  
+    ![사진](/images/스크린샷%202025-05-06%20190048.png)
+* `FORMAT_DATETIME` : DATETIME 타입 데이터를 특정 형태의 문자열 데이터로 변환  
+    ![사진](/images/스크린샷%202025-05-06%20190148.png)
+* `LAST_DAY` : 마지막 날을 알고 싶은 경우, 자동으로 월의 마지막 값을 계산해서 특정 연산을 할 경우  
+    ![사진](/images/스크린샷%202025-05-06%20190403.png)
+* `DATETIME_DIFF` : 두 DATETIME의 차이를 알고 싶은 경우  
+    ![사진](/images/스크린샷%202025-05-06%20203421.png)
 
-#### syntax error
-* 번역기 돌려보기
-* 구글에 검색해 보기 
-* 빨간색 체크표시 된 곳 혹은 그 위에가 오류일 경우 多
 
-## 데이터 타입과 데이터 변환
+# 4-5. 시간 데이터 연습문
 
-### 데이터 타입
-
-* 숫자 : 1, 2, 3, 4
-* 문자 : "나", "데이터"
-* 시간, 날짜 : 2024-01-01
-* 부울 : 참/거짓 
-
-### 데이터 변환
-
-**보이는 것과 저장된 것의 차이 존재**  
-*e.g. 1이어도 문자일 수도 있음 -> 우리가 원하는 타입으로 변환해야 함*
-
-`CAST` : 자료 타입 변경 함수   
-`SAFE_` : 조금 더 안전한 변경 함수
+## 1. 트레이너가 포켓몬을 포획할 날짜(catch_date)를 기준으로 2023년 1월에 포획한 포켓몬의 수를 계산
+* catch_datetime 이라고 되어 있지만 utc 가 있기에 time stamp 로 보는 것이 맞음 
+* date 도 utc 기준인지, kr 기준인지 확인해 봐야 함 
 ```
 SELECT
-    CAST(1 AS STRING) # 숫자 1을 문자 1로 변경 
+    id, 
+    catch_date,
+    DATE(DATETIME(catch_datetime, "Asia/Seoul")) AS catch_datetime_kr_date
+FROM basic.trainer_pokemon
+WHERE 
+```
+* 확인하는 방법
+```
+SELECT
+    COUNT(DISTINCT id) AS cnt
+FROM basic.trainer_pokemon
+WHERE 
+    EXTRACT(YEAR FROM DATETIME(catch_datetime, "Asia/Seoul")) = 2023 
+    AND EXTRACT(MONTH FROM DATETIME(catch_datetime, "Asia/Seoul")) = 1
+```
+
+## 2. 배틀이 일어난 시간(battle_datetime)을 기준으로, 오전 6시에서 오후6시 사이에 일어난 배틀의 수를 계산해주세요.
+```
+SELECT
+    id,
+    battle_datetime, 
+    DATETIME(battle_timestamp,"Asia/Seoul") AS battle_timestamp_kr
+FROM basic.battle
 ```
 ```
 SELECT
-    SAFE_CAST("카일스쿨" AS INT64) # 변환 실패 -> NULL 값 반환 
+    COUNTIF(battle_datetime = DATETIME(battle_timestamp,"Asia/Seoul")) AS SAME 
+FROM basic.battle
 ```
-<br>
+* 데이터 확인 
+```
+SELECT
+    COUNT(DISTINCT id)
+FROM basic.battle
+WHERE
+    EXTRACT(HOUR FROM battle_datetime) >= 6
+    AND EXTRACT(HOUR FROM battle_datetime) <= 18 
+```
+```
+SELECT
+    COUNT(DISTINCT id)
+FROM basic.battle
+WHERE
+    EXTRACT(HOUR FROM battle_datetime) BETWEEN 6 and 18
+```
+* 시간의 경우 숫자형이기 때문에 between 사용 가능 
+```
+SELECT
+    *,
+    EXTRACT(HOUR FROM battle_datetime)
+FROM basic.battle
+```
 
-* 수학 함수 (외울 필요 X)
-    * tip. 나누기를 할 경우 x/y 대신 SAFE_DIVIDE 함수 사용
-    ```
-    SAFE_DIVIDE(x,y) # x, y 중 하나라도 0인 경우 그냥 나누면 zero error 발생
-    ```
-<br>
+## 3. 각 트레이너별로 그들이 포켓몬을 포획한 첫 날(catch_date)을 찾고, 그 날짜를 ‘DD/MM/YYYY’ 형식으로 출력해주세요. (2024-01-01 ⇒ 01/01/2024)
+```
+SELECT
+    trainer_id,
+    FORMAT_DATE("%d/%m/%Y", min_date) AS new_min
+FROM (
+    SELECT
+        trainer_id,
+        MIN(DATE(catch_datetime, "Asia/Seoul")) AS min_date
+    FROM basic.trainer_pokemon
+    GROUP BY
+        trainer_id
+)   
+ORDER BY
+        trainer_id      
+```
+* 데이터도 숫자가 작을 수록 min 
+* order by 는 맨 마지막에 진행 
+## 4. 배틀이 일어난 날짜(battle_date)를 기준으로 요일별로 배틀이 얼마나 자주 일어났는지 계산해주세요.
+```
+SELECT
+    day_of_week,
+    count(DISTINCT id) AS battle_cnt
+FROM(
+    SELECT
+        *,
+        EXTRACT(DAYOFWEEK FROM battle_date) AS day_of_week
+    FROM basic.battle
+)
+GROUP BY
+    day_of_week
+```
+## 5. 트레이너가 포켓몬을 처음으로 포획한 날짜와 마지막으로 포획한 날짜의 간격이 큰 순으로 정렬하는 쿼리를 작성해주세요.
+```
+SELECT
+    *,
+    DATETIME_DIFF(max_date, min_date, DAY) AS diff
+DATETIME_DIFF()
+FROM(
+    SELECT
+        trainer_id,
+        MIN(DATETIME(catch_datetime,"Asia/Seoul")) AS min_date,
+        MAX(DATETIME(catch_datetime,"Asia/Seoul")) AS max_date
+    FROM basic.battle
+    GROUP BY
+        trainer_id
+)
+ORDER BY
+    diff DESC
+```
+# 4-6. 조건문
 
-
-* 문자열 함수 -> 이 5개를 한 번에 같이 쓸 수 있음!
-    ![사진](/images/스크린샷%202025-04-07%20172424.png)  
-    * `CONCAT` (문자열 붙이기) : 이 코드는 데이터나 숫자를 데이터셋 안에 직접 넣음 -> FROM 없어도 실행 
+* `CASE WHEN`  
+    * 작성 방법  
         ```
-        SELECT 
-            CONCAT("안녕", "하세요", "!") AS result
-        ```
-    * `SPILT` (문자열 분리) : SPILT(문자열 원본, 나눌 기준이 되는 문자)  
-        => **배열로 저장됨!**
-        ``` 
         SELECT
-            SPILT("가, 나, 다, 라", ",") AS result # 쉼표 기준으로 나눠라 -> 여기는 쉼표 뒤에 띄어쓰기 있어서 "가", " 나" 로 됨 
+            CASE
+                WHEN 조건 1 THEN 조건1이 참일 경우 결과
+                WHEN 조건 2 THEN 조건2가 참일 경우 결과
+            ELSE 그 외 조건일 경우 결과
+        END AS 새로운 칼럼 이름 
         ```
-    * `REPLACE` (특정 단어 수정) : REPLACE(문자열 원본, 찾을 단어, 바꿀 단어)
+    * 예시 문제  
+        ![사진](/images/스크린샷%202025-05-06%20220430.png)  
+    * 두 when 에 다 겹치면, 앞선 순서를 따른다는 것을 명심! 
+* `IF` : 단일 조건일 때
+    * 작성 방법  
         ```
-        SELECT
-            REPLACE("안녕하세요", "안녕", "실천") AS result
-    * `TRIM` (문자열 자르기) : TRIM(문자열 원본, 자를 단어)
+        IF(조건문, true 일 때 값, FALSE 일 때 값) AS 새로운 칼럼 이름 
         ```
-        SELECT
-            TRIM("안녕하세요","하세요") AS result
-        ```
-    * `UPPER` (영어 소문자 -> 대문자) : UPPER(문자열 원본)
-        ```
-        SELECT
-            UPPER("abc") AS result
-        ```
-<br>
 
-### 날짜 및 시간 데이터
-**우리가 어떤 행위를 할 때, 시간의 흐름에 따라 진행하므로 시간을 다루는 게 중요함**
+# 4-7. 조건문 연습 문제
 
-* 시간 데이터 다루기
-    * `DATE` : DATE만 표시하는 데이터 (e.g. 2023-12-31)
-    * `DATETIME` : DATE와 TIME까지 표시하는 데이터, Time Zone 정보 X (2023-12-31 14:00:00)
-        * `Time zone` : GMT (영국 근처), UTC (국제 표준 시간), `TIMESTAMP` (UTC부터 경과한 시간을 나타내는 값, e.g. 2023-12-31 14:00:00 UTC) => Time Zone 정보 O -> UTC 로 나옴! (UTC 에서 이만큼 지났다~)
-    * `TIME` : 날짜와 무관하게 시간만 표시 (23:59:59:00)
-    * `millisecond` (1000ms==1초) : millisecond -> timestamp -> datetime 으로 변경해서 사용 (빠른 반응이 필요한 분야에서 사용) 
-    * `microsecond` : 1/1000ms, 1/1000000초  
-        ![사진](/images/스크린샷%202025-04-07%20191047.png)  
-        ![사진](/images/스크린샷%202025-04-07%20191755.png)
+## 1. 포켓몬의 ‘Speed’가 70이상이면 ‘빠름’, 그렇지 않으면 ‘느림’으로 표시하는 새로운 칼럼 ‘Speed_Category’를 만들어주세요.
+```
+SELECT
+    id,
+    kor_name,
+    speed,
+    IF(speed >= 70, "빠름", "느림") AS Speed_Category
+FROM basic.pokemon
+```
+## 2. 포켓몬의 type1에 따라 water, fire, electric 타입은 각각 물, 불, 전기로 그 외 타입은 기타로 분류하는 새로운 컬럼 type_korean을 만들어 주세요.
+```
+SELECT
+    id,
+    kor_name,
+    type1,
+    CASE
+        WHEN type1 = 'Water' THEN '물'
+        WHEN type1 = 'Fire' THEN '불'
+        WHEN type1 = 'Electric' THEN '전기'
+    ELSE "기타"
+    END AS type_korean
+FROM basic.pokemon
+```
+## 3. 각 포켓몬의 총점(total)을 기준으로, 300 이하면 ‘low’, 301에서 500 사이면 ‘medium’, 501이상이면 ‘high’로 분류해주세요.
+```
+SELECT 
+    *
+FROM(
+SELECT
+    id,
+    kor_name,
+    total,
+    CASE
+        WHEN total <= 300 THEN 'low'
+        WHEN total BETWEEN 300 AND 500 THEN 'medium'
+    ELSE "high"
+    END AS total_pokemon
+FROM basic.pokemon
+)
+WHERE 
+    total_pokemon = 'low'
+```
+* 사이에 있다면 BETWEEN 사용 ~ 
+* total_pokemon 칼럼을 쓰고 싶다면, 서브쿼리 해서 그 칼럼이 실행한 다음 가져와야 됨 
+## 4. 각 트레이너의 배지 개수를 기준으로 5개 이하면 beginner, 6개에서 8개 사이면 Intermediate, 그 이상이면 advanced로 분류해주세요.
+```
+SELECT
+    id,
+    name,
+    badge_count,
+    CASE
+        WHEN badge_count <= 5 THEN 'beginner'
+        WHEN badge_count BETWEEN 6 and 8 THEN 'Intermediate'
+    ELSE 'advanced'
+    END AS badge_level 
+FROM basic.trainer 
+```
+## 5. 트레이너가 포켓몬을 포획한 날짜(catch_date)가 ‘2023-01-01’ 이후이면 recent, 그렇지 않으면 old로 분류해주세요.
+```
+SELECT
+    id,
+    trainer_id,
+    pokemon_id,
+    catch_datetime,
+    IF(DATE(catch_dateimte, "Asia/Seoul") >= "2023-01-01", "recent", "old") AS recent 
+FROM basic.trainer_pokemon
+```
+```
+SELECT
+    id,
+    trainer_id,
+    pokemon_id,
+    catch_datetime,
+    IF(DATE(catch_dateimte, "Asia/Seoul") >= "2023-01-01", "recent", "old") AS recent,
+    "recent" AS recent_all
+FROM basic.trainer_pokemon
+```
+* 모든 칼럼에 동일한 값을 추가하고 싶다면!
+## 6. 배틀에서 승자(winner_id)가 player1_id와 같으면 player 1 wins, player2_id와 같으면 player2wins, 그렇지 않으면 draw로 결과가 나오게 해주세요.
+```
+SELECT
+    id, 
+    winner_id,
+    player1_id,
+    player2_id,
+    CASE
+        WHEN winner_id = player1_id THEN "player 1 wins"
+        WHEN winner_id = player2_id THEN "player 2 wins"
+    ELSE "draw"
+    END AS battle_result 
+FROM basic.battle 
+``` 
+# 4-8. 정리
+**데이터 타입 변환, 조건문은 다 SELECT 문에서 이루어짐!** 
 
-**많은 회사의 table에 시간이 timestamp로 저장된 경우가 많음 (혹은 datatime)**  
-**=> timestamp <-> datetime 변환을 할 수 있어야 함**
+# 4-9. 빅쿼리 공식 문서 확인 (필요할 때 찾아보려고) 
+* 기술을 어떻게 사용하는지에 대한 문서
+* “기술명” + documentation 으로 검색
+* google sql == big query
+* 어떻게 쓰는지 모를 때, [bigquery 특정 행위] 검색
+    * i want to change string to int in bigquery
+    * stackoverflow 에서 찾아봥 
+* 가장 최근 문서 찾아서 확인해라 ~ 
+* slack Rss Feed : 새로운 소식 나오면 알려줌 ~!~!!! 
