@@ -260,3 +260,4 @@ FROM basic.battle
     * stackoverflow 에서 찾아봥 
 * 가장 최근 문서 찾아서 확인해라 ~ 
 * slack Rss Feed : 새로운 소식 나오면 알려줌 ~!~!!! 
+

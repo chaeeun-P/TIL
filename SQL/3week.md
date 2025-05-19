@@ -84,9 +84,12 @@ SELECT
         * `Time zone` : GMT (영국 근처), UTC (국제 표준 시간), `TIMESTAMP` (UTC부터 경과한 시간을 나타내는 값, e.g. 2023-12-31 14:00:00 UTC) => Time Zone 정보 O -> UTC 로 나옴! (UTC 에서 이만큼 지났다~)
     * `TIME` : 날짜와 무관하게 시간만 표시 (23:59:59:00)
     * `millisecond` (1000ms==1초) : millisecond -> timestamp -> datetime 으로 변경해서 사용 (빠른 반응이 필요한 분야에서 사용) 
+        * `TIMESTAMP_MILLIS` : milli 를 timestamp 로 바꿈 
     * `microsecond` : 1/1000ms, 1/1000000초  
         ![사진](/images/스크린샷%202025-04-07%20191047.png)  
         ![사진](/images/스크린샷%202025-04-07%20191755.png)
 
 **많은 회사의 table에 시간이 timestamp로 저장된 경우가 많음 (혹은 datatime)**  
 **=> timestamp <-> datetime 변환을 할 수 있어야 함**
+* DATETIME(TIMESTAMP, 타임존) -> DATETIME 으로 변환 
+* TIMESTAMP(datetime_value)
