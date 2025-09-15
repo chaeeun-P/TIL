@@ -215,8 +215,8 @@ https://leetcode.com/problems/department-highest-salary/description/
 
 ## 문제 인증란
 
-![사진]()
-![사진]()
+![사진](/images/스크린샷%202025-09-15%20215102.png)
+![사진](/images/스크린샷%202025-09-15%20215303.png)
 
 ---
 
