@@ -188,9 +188,9 @@ https://leetcode.com/problems/last-person-to-fit-in-the-bus/
 
 ## 문제 인증란
 
-![사진](/images/)
-![사진](/images/)
-![사진](/images/)
+![사진](/images/스크린샷%202025-09-22%20210934.png)
+![사진](/images/스크린샷%202025-09-22%20211115.png)
+![사진](/images/스크린샷%202025-09-22%20211221.png)
 
 ---
 
