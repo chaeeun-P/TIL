@@ -148,8 +148,8 @@ https://school.programmers.co.kr/learn/courses/30/lessons/133027
 
 ## 문제 인증란
 
-![사진](/images/)
-![사진](/images/)
+![사진](/images/스크린샷%202025-09-30%20132225.png)
+![사진](/images/스크린샷%202025-09-30%20132345.png)
 
 ---
 
