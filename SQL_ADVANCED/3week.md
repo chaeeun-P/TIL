@@ -179,7 +179,7 @@ https://leetcode.com/problems/last-person-to-fit-in-the-bus/
 > LeetCode 2481. Last Person to Fit in the Bus 
 >
 > 학습 포인트 : SUM( ) OVER (ORDER BY ...) 로 누적 합계 계산 후 조건 필터링 
-
+1
 
 
 문제를 푸는 다양한 방법이 존재하지만, **윈도우 함수를 사용하여 해결하는 방식에 대해 고민해주시길 바랍니다.** 
