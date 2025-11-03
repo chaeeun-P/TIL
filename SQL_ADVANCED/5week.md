@@ -195,9 +195,9 @@ ON
 
 ## 문제 인증란
 
-![iamge](/images/)
-![iamge](/images/)
-![iamge](/images/)
+![iamge](/images/스크린샷%202025-11-03%20203456.png)
+![iamge](/images/스크린샷%202025-11-03%20203613.png)
+![iamge](/images/스크린샷%202025-11-03%20203709.png)
 
 
 
