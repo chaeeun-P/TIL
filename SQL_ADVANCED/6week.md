@@ -200,7 +200,7 @@ https://leetcode.com/problems/reformat-department-table/description/
 
 ## 문제 인증란
 
-![images](/images/)
+![images](/images/스크린샷%202025-11-10%20221238.png)
 
 
 
