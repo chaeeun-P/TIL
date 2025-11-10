@@ -1,10 +1,3 @@
-# Week 6: PCA on scikit-learn digits (8x8 -> 2D)
-# - 목표: 64차원 이미지를 PCA로 2차원 축소 후 산점도 시각화
-# - 출력: 2D 산점도, PC1/PC2 분산 설명력(비율) 표시
-# - 해석 포인트:
-#   * PC1·PC2가 전체 분산의 몇 %를 설명하는지
-#   * 2D 평면에서 각 숫자 클래스의 군집/중첩 정도
-
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_digits
